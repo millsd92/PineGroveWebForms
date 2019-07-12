@@ -6,16 +6,26 @@ using System.Threading.Tasks;
 
 namespace PineGroveWebForms.Services
 {
+    /// <summary>
+    /// This is a singleton, also known as an object that only allows one single instance of itself to exist, and contains all the event information.
+    /// </summary>
     public sealed class EventsSingleton
     {
+        // Class variables.
         private static EventsSingleton instance = null;
         private static RestClient client;
         private static DataTable events;
         private static List<Models.Event> currentEvents;
 
+        /// <summary>
+        /// This singleton provides access to all of the events and limits the number of calls to the API.
+        /// </summary>
         public EventsSingleton()
         { Events = SetUpEvents(); }
 
+        /// <summary>
+        /// If there is no instance of this object, create it. There is no set method for the instance.
+        /// </summary>
         public static EventsSingleton Instance
         {
             get
@@ -26,8 +36,15 @@ namespace PineGroveWebForms.Services
             }
         }
 
+        /// <summary>
+        /// This is the data table of all of the events.
+        /// </summary>
         public Task<DataTable> Events { get; private set; } = null;
 
+        /// <summary>
+        /// This is called to set up all of the events by calling the API.
+        /// </summary>
+        /// <returns>An awaitable task who's result is a data table containing all of the event data necessary to populate the events web form.</returns>
         private async Task<DataTable> SetUpEvents()
         {
             client = new RestClient();
@@ -92,6 +109,9 @@ namespace PineGroveWebForms.Services
             return events;
         }
 
+        /// <summary>
+        /// This is called to re-call the API after altering the database.
+        /// </summary>
         public void Restart()
         {
             instance = null;
